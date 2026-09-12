@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChatGPT 圖像提示詞網站｜五大分類整理</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --primary: #4f46e5;
+    --primary-soft: #eef2ff;
+    --border: #e5e7eb;
+    --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+    --radius: 18px;
+  }
+  body.dark {
+    --bg: #0b1120;
+    --card: #111827;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --primary: #818cf8;
+    --primary-soft: #1e1b4b;
+    --border: #263244;
+    --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    transition: background .25s, color .25s;
+  }
+  .container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+  header { padding: 42px 0 24px; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+  h1 { margin: 0 0 8px; font-size: clamp(1.7rem, 4vw, 2.6rem); letter-spacing: -.02em; }
+  .subtitle { margin: 0; color: var(--muted); max-width: 720px; }
+  .theme-btn {
+    border: 1px solid var(--border); background: var(--card); color: var(--text);
+    padding: 10px 14px; border-radius: 999px; cursor: pointer; font-size: .95rem;
+    box-shadow: var(--shadow);
+  }
+  .toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0 18px; }
+  .search {
+    flex: 1 1 260px; min-width: 220px; padding: 14px 16px; border-radius: 14px;
+    border: 1px solid var(--border); background: var(--card); color: var(--text);
+    font-size: 1rem; outline: none; box-shadow: var(--shadow);
+  }
+  .search:focus { border-color: var(--primary); }
+  .categories { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 18px; }
+  .cat-btn {
+    border: 1px solid var(--border); background: var(--card); color: var(--text);
+    padding: 9px 14px; border-radius: 999px; cursor: pointer; font-size: .93rem;
+    transition: .2s;
+  }
+  .cat-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .cat-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .stats { color: var(--muted); font-size: .92rem; margin-bottom: 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; padding-bottom: 48px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); }
+  .card-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .badge {
+    display: inline-block; font-size: .75rem; padding: 4px 9px; border-radius: 999px;
+    background: var(--primary-soft); color: var(--primary); font-weight: 600;
+  }
+  .fav-btn {
+    border: none; background: transparent; color: var(--muted); font-size: 1.35rem;
+    cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: 8px;
+  }
+  .fav-btn.active { color: #f59e0b; }
+  .card h3 { margin: 0; font-size: 1.08rem; line-height: 1.4; }
+  .prompt {
+    margin: 0; color: var(--muted); font-size: .92rem; white-space: pre-wrap;
+    max-height: 170px; overflow: auto; padding-right: 4px;
+  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tags span { font-size: .75rem; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 3px 7px; border-radius: 999px; }
+  .copy-btn {
+    margin-top: auto; border: none; background: var(--primary); color: #fff;
+    padding: 11px 14px; border-radius: 12px; cursor: pointer; font-weight: 600;
+    transition: .2s;
+  }
+  .copy-btn:hover { filter: brightness(1.08); }
+  .copy-btn.copied { background: #16a34a; }
+  .empty { display: none; text-align: center; padding: 60px 20px; color: var(--muted); }
+  footer { border-top: 1px solid var(--border); padding: 24px 0 40px; color: var(--muted); font-size: .88rem; }
+  @media (max-width: 640px) {
+    header { padding-top: 28px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>ChatGPT 圖像提示詞網站</h1>
+        <p class="subtitle">依照五大分類整理：品牌社群、工作應用、生活實用、靈感點子、照片風格轉換。可搜尋、複製、收藏，直接貼到 ChatGPT 使用。</p>
+      </div>
+      <button class="theme-btn" id="themeToggle">🌙 深色</button>
+    </div>
+  </header>
+
+  <section class="toolbar">
+    <input id="searchInput" class="search" type="search" placeholder="搜尋提示詞、分類或標籤..." />
+  </section>
+
+  <nav id="categoryNav" class="categories"></nav>
+  <div class="stats" id="statsText"></div>
+  <section id="cardGrid" class="grid"></section>
+  <div id="emptyState" class="empty">沒有找到符合的提示詞，換個關鍵字試試。</div>
+
+  <footer>
+    分類架構參考《數位時代》文章整理；提示詞為示範內容，可自行在 <code>prompts</code> 陣列擴充到 130 組。
+  </footer>
+</div>
+
+<script>
+  const categories = ['全部', '品牌社群類', '工作應用類', '生活實用類', '靈感點子類', '照片風格轉換類'];
+
+  const prompts = [
+    // 品牌社群類
+    { id: 1, category: '品牌社群類', title: '社群貼文：極簡產品情境', prompt: `為一款保養品製作 Instagram 社群貼文主視覺：極簡構圖、米白色背景、產品置中、柔和自然光、旁邊搭配礦石與乾燥花，整體呈現高級、乾淨、可信賴的質感。畫面比例 1:1，保留上方文字空間。`, tags: ['Instagram', '產品', '極簡'] },
+    { id: 2, category: '品牌社群類', title: 'YouTube 縮圖：驚訝表情與大字', prompt: `製作一張 YouTube 縮圖：左側是一位表情誇張驚訝的年輕人，右側是粗體大字標題「你絕對想不到」，背景使用高對比霓虹色漸層與放射線，整體風格吸睛、節奏快、適合知識型影片。比例 16:9。`, tags: ['YouTube', '縮圖', '高點擊'] },
+    { id: 3, category: '品牌社群類', title: '商品形象照：白底高級感', prompt: `將上傳的商品照片重新生成為專業電商形象照：純白背景、柔和陰影、45 度角展示、細節清晰、材質真實，整體像高級品牌官網商品圖。保留商品原始顏色與 Logo。`, tags: ['電商', '商品照', '白底'] },
+    { id: 4, category: '品牌社群類', title: '活動海報：未來感霓虹', prompt: `設計一張未來感活動海報：黑底、霓虹紫與青藍色光線、玻璃質感幾何圖形、中央有巨大標題「FUTURE NOW」，下方保留日期、地點與 QR Code 空間。風格前衛、科技、適合音樂祭或發表會。`, tags: ['海報', '霓虹', '活動'] },
+    { id: 5, category: '品牌社群類', title: 'EDM 主視覺：季節促銷', prompt: `製作一封季節促銷 EDM 的主視覺：溫暖秋色調、落葉與咖啡杯元素、產品置於畫面右側、左側留白給標題與按鈕，整體溫馨、有質感、適合電子報版型。比例 3:2。`, tags: ['EDM', '促銷', '季節'] },
+    { id: 6, category: '品牌社群類', title: '品牌 Logo 概念圖：幾何字母', prompt: `為品牌「NOVA」設計 3 款 Logo 概念圖：以幾何線條與字母 N 結合，風格現代、極簡、可應用於名片與網站。提供黑底白字與白底黑字兩種版本，向量感、乾淨俐落。`, tags: ['Logo', '品牌', '幾何'] },
+
+    // 工作應用類
+    { id: 7, category: '工作應用類', title: '商業簡報封面', prompt: `設計一張商業簡報封面：主題「2026 市場策略」，深藍色漸層背景、抽象數據線條、右上角有公司 Logo 預留位，中央標題使用現代無襯線字體，整體專業、可信、適合高階主管會議。比例 16:9。`, tags: ['簡報', '商業', '封面'] },
+    { id: 8, category: '工作應用類', title: '產品比較表', prompt: `製作一張產品比較表視覺：三個產品並排，下方用圖示與勾選符號比較功能、價格、評價，配色簡潔、資訊層級清楚，適合放在官網或簡報中。風格現代、易讀。`, tags: ['比較表', '產品', '資訊圖表'] },
+    { id: 9, category: '工作應用類', title: 'App Icon：圓角極簡', prompt: `設計一款記帳 App 的 Icon：圓角方形、藍綠漸層背景、中央是簡潔的錢包與硬幣符號，風格扁平、現代、辨識度高，適合 iOS 與 Android 桌面。提供 1024x1024 尺寸。`, tags: ['App', 'Icon', 'UI'] },
+    { id: 10, category: '工作應用類', title: '工作 Checklist：手帳風', prompt: `製作一張工作 Checklist 圖卡：米色紙質背景、手寫風標題「今日待辦」、下方有 5 個核取方塊與橫線，搭配小圖示如咖啡杯、筆記本、鬧鐘。整體溫暖、實用、適合列印或 Notion 封面。`, tags: ['Checklist', '待辦', '手帳'] },
+    { id: 11, category: '工作應用類', title: '操作流程圖解', prompt: `將以下步驟製作成 4 格流程圖解：註冊帳號、選擇方案、填寫資料、完成付款。每格有簡單圖示、編號與短標題，配色一致，風格扁平化，適合放在說明中心或教學文件。`, tags: ['流程圖', '教學', '圖解'] },
+    { id: 12, category: '工作應用類', title: 'Q&A 問答圖卡', prompt: `製作一張 Q&A 問答圖卡：上方是問題「如何申請退款？」，下方是簡短答案，旁邊搭配對話框與客服圖示，背景使用品牌色，整體清楚、親切、適合社群客服回覆。比例 4:5。`, tags: ['Q&A', '客服', '圖卡'] },
+
+    // 生活實用類
+    { id: 13, category: '生活實用類', title: '菜單設計：咖啡廳', prompt: `設計一份咖啡廳菜單：A4 直式、米白色背景、手繪咖啡杯與植物插畫、標題「日常咖啡」、品項分為義式咖啡、手沖、甜點，價格清楚。風格文青、溫暖、適合店內使用。`, tags: ['菜單', '咖啡廳', '文青'] },
+    { id: 14, category: '生活實用類', title: '季節月曆：2026 春夏', prompt: `製作一張 2026 年 4 月月曆：上方有櫻花與春日插畫，下方是月曆格線，重要節日用小圖示標記，配色粉嫩柔和，適合列印成 A4 掛曆。`, tags: ['月曆', '春天', '插畫'] },
+    { id: 15, category: '生活實用類', title: '旅遊行程規劃表', prompt: `製作一張東京 5 天 4 夜旅遊行程表：表格包含日期、上午、下午、晚上、交通、備註，搭配淺色地圖與景點小圖示，整體清爽、易讀，適合手機截圖與列印。`, tags: ['旅遊', '行程', '東京'] },
+    { id: 16, category: '生活實用類', title: '一週習慣追蹤表', prompt: `設計一張一週習慣追蹤表：左側列出習慣如喝水、運動、閱讀、早睡，右側是週一到週日的方格，可打勾或填色。風格極簡、莫蘭迪色系，適合列印或手帳使用。`, tags: ['習慣', '追蹤', '手帳'] },
+    { id: 17, category: '生活實用類', title: '讀書筆記風', prompt: `生成一張讀書筆記模板：牛皮紙背景、上方有書本與鉛筆插畫、標題「閱讀筆記」、下方有書名、作者、重點摘要、心得欄位。整體溫暖、復古、適合列印。`, tags: ['讀書', '筆記', '模板'] },
+    { id: 18, category: '生活實用類', title: '時間管理規劃圖', prompt: `製作一張時間管理規劃圖：圓餅圖顯示工作、睡眠、學習、休閒比例，旁邊有每日時間區塊與待辦事項，配色清楚、現代，適合放在書桌前提醒自己。比例 4:3。`, tags: ['時間管理', '規劃', '圖表'] },
+
+    // 靈感點子類
+    { id: 19, category: '靈感點子類', title: '四格漫畫：辦公室日常', prompt: `創作一篇四格漫畫，主題是辦公室日常：第一格主角看著時鐘，第二格會議中眼神死，第三格發現便當被偷，第四格崩潰大喊。風格日系簡約、線條乾淨、對白用中文，適合社群分享。`, tags: ['漫畫', '四格', '辦公室'] },
+    { id: 20, category: '靈感點子類', title: 'LINE 貼圖角色：貓咪上班族', prompt: `設計一組 LINE 貼圖角色：一隻穿襯衫打領帶的貓咪上班族，表情有開心、崩潰、加油、問號、謝謝、再見，共 6 款。風格可愛、圓潤、線條簡單，背景透明，適合通訊軟體使用。`, tags: ['LINE', '貼圖', '角色'] },
+    { id: 21, category: '靈感點子類', title: '黑膠唱片封面', prompt: `設計一張黑膠唱片封面：復古 70 年代風格、幾何色塊、橘紅與深藍配色、中央有抽象太陽圖案，標題「MIDNIGHT GROOVE」。整體像經典爵士或放克專輯，正方形構圖。`, tags: ['黑膠', '封面', '復古'] },
+    { id: 22, category: '靈感點子類', title: '黏土 Q 版角色', prompt: `將上傳的人物照片轉換成黏土 Q 版角色：大頭小身體、圓潤臉頰、樹脂黏土質感、柔和光線、背景是簡單工作室。保留人物主要特徵如髮型、眼鏡、服裝顏色。`, tags: ['黏土', 'Q版', '角色'] },
+    { id: 23, category: '靈感點子類', title: '復古雜誌封面', prompt: `將照片製作成 1960 年代復古雜誌封面：泛黃紙質、印刷顆粒、大標題「THE MODERN LIFE」、側邊有欄目文字與條碼，人物穿著復古服裝，整體像老派生活雜誌。`, tags: ['雜誌', '封面', '復古'] },
+    { id: 24, category: '靈感點子類', title: '扭蛋包裝風', prompt: `設計一款扭蛋包裝：透明塑膠殼、彩色紙卡、標題「office survival kit」，裡面有小公仔如咖啡杯、電腦、泡麵、眼藥水。風格日系、可愛、鮮豔，適合商品攝影。`, tags: ['扭蛋', '包裝', '日系'] },
+
+    // 照片風格轉換類
+    { id: 25, category: '照片風格轉換類', title: '復古海報風', prompt: `將我上傳的照片轉換成復古電影海報：暖黃色調、底片顆粒、幾何色塊、粗體標題，人物穿著 70 年代服裝，背景有城市剪影與霓虹燈。保留人物五官特徵，構圖像經典電影海報。`, tags: ['復古', '海報', '電影'] },
+    { id: 26, category: '照片風格轉換類', title: '風景照變紀念徽章', prompt: `將這張風景照轉換成金屬紀念徽章：圓形構圖、浮雕質感、金色邊框、背景有放射線，下方可加上地名與年份。整體像旅遊紀念品，精緻、有立體感。`, tags: ['風景', '徽章', '紀念品'] },
+    { id: 27, category: '照片風格轉換類', title: '模擬 80 年代的你', prompt: `根據我上傳的照片，生成 1980 年代版本的我：復古捲髮或墊肩外套、霓虹色背景、雷射光線、底片顆粒、拍立得色調。保留我的臉部特徵與神韻，整體像當年舞會或音樂錄影帶劇照。`, tags: ['80年代', '復古', '人像'] },
+    { id: 28, category: '照片風格轉換類', title: 'Y2K 四格大頭貼風', prompt: `將照片製作成 Y2K 四格大頭貼：金屬銀色背景、閃亮貼紙、愛心與星星裝飾、日期戳記、高對比色彩。人物表情可搞笑或冷酷，整體像 2000 年代拍貼機風格。`, tags: ['Y2K', '大頭貼', '四格'] },
+    { id: 29, category: '照片風格轉換類', title: '電玩像素風', prompt: `將照片轉換成 16-bit 電玩像素風格：角色變成像素人物、背景是復古遊戲場景、上方有血條與分數、整體像超任或街機遊戲畫面。保留人物主要特徵與配色。`, tags: ['像素', '電玩', '復古'] },
+    { id: 30, category: '照片風格轉換類', title: '復古膠片朦朧風', prompt: `將照片轉換成復古膠片風格：柔和朦朧、輕微漏光、顆粒感、低飽和暖色調、邊緣有暗角。人物像在午後陽光下不經意被拍下，整體自然、有故事感。`, tags: ['膠片', '朦朧', '底片'] },
+    { id: 31, category: '照片風格轉換類', title: '莫蘭迪色手繪風', prompt: `將照片轉換成莫蘭迪色系手繪插畫：低飽和灰粉色、灰藍色、灰綠色，線條柔和，像色鉛筆與水彩混合。背景簡化為色塊，人物特徵保留，整體安靜、優雅。`, tags: ['莫蘭迪', '手繪', '插畫'] },
+    { id: 32, category: '照片風格轉換類', title: '搞怪潦草塗鴉風', prompt: `將照片轉換成搞怪潦草塗鴉：粗黑線條、隨性變形、螢光色塊、對話框與手寫字，像隨手在筆記本上畫的惡搞肖像。保留人物辨識度，但加入誇張表情與搞笑元素。`, tags: ['塗鴉', '搞怪', '手繪'] }
+  ];
+
+  const state = {
+    category: '全部',
+    search: '',
+    favorites: []
+  };
+
+  try {
+    state.favorites = JSON.parse(localStorage.getItem('promptFavs')) || [];
+  } catch (e) {
+    state.favorites = [];
+  }
+
+  const categoryNav = document.getElementById('categoryNav');
+  const cardGrid = document.getElementById('cardGrid');
+  const statsText = document.getElementById('statsText');
+  const emptyState = document.getElementById('emptyState');
+  const searchInput = document.getElementById('searchInput');
+  const themeToggle = document.getElementById('themeToggle');
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function(m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+    });
+  }
+
+  function isFavorite(id) {
+    return state.favorites.includes(id);
+  }
+
+  function renderCategories() {
+    categoryNav.innerHTML = categories.map(cat => (
+      `<button class="cat-btn ${state.category === cat ? 'active' : ''}" onclick="setCategory('${cat}')">${cat}</button>`
+    )).join('');
+  }
+
+  function render() {
+    const q = state.search.toLowerCase();
+    const filtered = prompts.filter(p => {
+      const matchCategory = state.category === '全部' || p.category === state.category;
+      const matchSearch = !q ||
+        p.title.toLowerCase().includes(q) ||
+        p.prompt.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q) ||
+        p.tags.join(' ').toLowerCase().includes(q);
+      return matchCategory && matchSearch;
+    });
+
+    cardGrid.innerHTML = filtered.map(p => {
+      const fav = isFavorite(p.id);
+      return `
+        <article class="card">
+          <div class="card-head">
+            <span class="badge">${p.category}</span>
+            <button class="fav-btn ${fav ? 'active' : ''}" onclick="toggleFav(${p.id})" title="收藏">${fav ? '★' : '☆'}</button>
+          </div>
+          <h3>${escapeHtml(p.title)}</h3>
+          <p class="prompt">${escapeHtml(p.prompt)}</p>
+          <div class="tags">${p.tags.map(t => `<span>#${escapeHtml(t)}</span>`).join('')}</div>
+          <button class="copy-btn" onclick="copyPrompt(${p.id}, this)">複製提示詞</button>
+        </article>
+      `;
+    }).join('');
+
+    statsText.textContent = `顯示 ${filtered.length} / ${prompts.length} 組提示詞`;
+    emptyState.style.display = filtered.length ? 'none' : 'block';
+  }
+
+  window.setCategory = function(cat) {
+    state.category = cat;
+    renderCategories();
+    render();
+  };
+
+  window.toggleFav = function(id) {
+    const index = state.favorites.indexOf(id);
+    if (index > -1) {
+      state.favorites.splice(index, 1);
+    } else {
+      state.favorites.push(id);
+    }
+    localStorage.setItem('promptFavs', JSON.stringify(state.favorites));
+    render();
+  };
+
+  window.copyPrompt = async function(id, btn) {
+    const item = prompts.find(p => p.id === id);
+    if (!item) return;
+    const text = item.prompt;
+
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+
+      const oldText = btn.textContent;
+      btn.textContent = '已複製！';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = oldText;
+        btn.classList.remove('copied');
+      }, 1500);
+    } catch (err) {
+      alert('複製失敗，請手動選取文字。');
+    }
+  };
+
+  searchInput.addEventListener('input', function(e) {
+    state.search = e.target.value.trim();
+    render();
+  });
+
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark');
+    themeToggle.textContent = '☀️ 淺色';
+  }
+
+  themeToggle.addEventListener('click', function() {
+    document.body.classList.toggle('dark');
+    const isDark = document.body.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeToggle.textContent = isDark ? '☀️ 淺色' : '🌙 深色';
+  });
+
+  renderCategories();
+  render();
+</script>
+</body>
+</html>
